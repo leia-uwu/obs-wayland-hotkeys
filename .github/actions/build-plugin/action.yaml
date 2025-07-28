@@ -8,18 +8,6 @@ inputs:
     description: Build configuration
     required: false
     default: RelWithDebInfo
-  codesign:
-    description: Enable codesigning (macOS only)
-    required: false
-    default: 'false'
-  codesignIdent:
-    description: Developer ID for application codesigning (macOS only)
-    required: false
-    default: '-'
-  codesignTeam:
-    description: Team ID for application codesigning (macOS only)
-    required: false
-    default: ''
   workingDirectory:
     description: Working directory for packaging
     required: false
@@ -27,24 +15,6 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Run macOS Build
-      if: runner.os == 'macOS'
-      shell: zsh --no-rcs --errexit --pipefail {0}
-      working-directory: ${{ inputs.workingDirectory }}
-      env:
-        CCACHE_DIR: ${{ inputs.workingDirectory }}/.ccache
-        CODESIGN_IDENT: ${{ inputs.codesignIdent }}
-        CODESIGN_TEAM: ${{ inputs.codesignTeam }}
-      run: |
-        : Run macOS Build
-
-        local -a build_args=(--config ${{ inputs.config }})
-        if (( ${+RUNNER_DEBUG} )) build_args+=(--debug)
-
-        if [[ '${{ inputs.codesign }}' == 'true' ]] build_args+=(--codesign)
-
-        .github/scripts/build-macos ${build_args}
-
     - name: Install Dependencies 🛍️
       if: runner.os == 'Linux'
       shell: bash
@@ -72,22 +42,6 @@ runs:
         if (( ${+RUNNER_DEBUG} )) build_args+=(--debug)
 
         .github/scripts/build-ubuntu ${build_args}
-
-    - name: Run Windows Build
-      if: runner.os == 'Windows'
-      shell: pwsh
-      run: |
-        # Run Windows Build
-        if ( $Env:RUNNER_DEBUG -ne $null ) {
-          Set-PSDebug -Trace 1
-        }
-
-        $BuildArgs = @{
-          Target = '${{ inputs.target }}'
-          Configuration = '${{ inputs.config }}'
-        }
-
-        .github/scripts/Build-Windows.ps1 @BuildArgs
 
     - name: Create Summary 📊
       if: contains(fromJSON('["Linux", "macOS"]'),runner.os)

@@ -12,9 +12,6 @@ The plugin template is meant to be used as a starting point for OBS Studio plugi
 
 | Platform  | Tool   |
 |-----------|--------|
-| Windows   | Visal Studio 17 2022 |
-| macOS     | XCode 16.0 |
-| Windows, macOS  | CMake 3.30.5 |
 | Ubuntu 24.04 | CMake 3.28.3 |
 | Ubuntu 24.04 | `ninja-build` |
 | Ubuntu 24.04 | `pkg-config`
@@ -53,7 +50,3 @@ Successful builds on GitHub Actions will produce build artifacts that can be dow
 ### Building a Release
 
 To create a release, an appropriately named tag needs to be pushed to the `main`/`master` branch using semantic versioning (e.g., `12.3.4`, `23.4.5-beta2`). A draft release will be created on the associated repository with generated installer packages or installation programs attached as release artifacts.
-
-## Signing and Notarizing on macOS
-
-Basic concepts of codesigning and notarization on macOS are explained in the correspodning [Wiki article](https://github.com/obsproject/obs-plugintemplate/wiki/Codesigning-On-macOS) which has a specific section for the [GitHub Actions setup](https://github.com/obsproject/obs-plugintemplate/wiki/Codesigning-On-macOS#setting-up-code-signing-for-github-actions).

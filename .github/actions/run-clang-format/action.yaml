@@ -12,13 +12,6 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Check Runner Operating System 🏃‍♂️
-      if: runner.os == 'Windows'
-      shell: bash
-      run: |
-        : Check Runner Operating System 🏃‍♂️
-        echo "::notice::run-clang-format action requires a macOS-based or Linux-based runner."
-        exit 2
 
     - name: Check for Changed Files ✅
       uses: ./.github/actions/check-changes
