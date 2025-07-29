@@ -277,4 +277,14 @@ void ShortcutsPortal::shutdown()
             QDBusObjectPath, QString, qulonglong, QVariantMap
         ))
     );
+    QDBusConnection::sessionBus().disconnect(
+        freedesktopDest,
+        freedesktopPath,
+        globalShortcutsInterface,
+        QLatin1String("Deactivated"),
+        this,
+        SLOT(onActivatedSignal(
+            QDBusObjectPath, QString, qulonglong, QVariantMap
+        ))
+    );
 }
