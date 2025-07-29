@@ -57,6 +57,7 @@ if (( ! (${skips[(Ie)all]} + ${skips[(Ie)deps]}) )) {
       qt6-base-dev${suffix}
       libqt6svg6-dev${suffix}
       qt6-base-private-dev${suffix}
+      qt6-wayland-dev${suffix}
     )
   }
 
