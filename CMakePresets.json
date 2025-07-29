@@ -8,11 +8,7 @@
   "configurePresets": [
     {
       "name": "template",
-      "hidden": true,
-      "cacheVariables": {
-        "ENABLE_FRONTEND_API": true,
-        "ENABLE_QT": true
-      }
+      "hidden": true
     },
     {
       "name": "ubuntu-x86_64",
