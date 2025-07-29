@@ -28,7 +28,7 @@ jobs:
   create-release:
     name: Create Release 🛫
     if: github.ref_type == 'tag'
-    runs-on: ubuntu-25.04
+    runs-on: ubuntu-latest
     needs: build-project
     defaults:
       run:
@@ -72,7 +72,7 @@ jobs:
           commit_hash="${GITHUB_SHA:0:9}"
 
           variants=(
-            'ubuntu-25.04-x86_64;tar.xz|deb|ddeb'
+            'ubuntu-latest-x86_64;tar.xz|deb|ddeb'
             'sources;tar.xz'
           )
 
