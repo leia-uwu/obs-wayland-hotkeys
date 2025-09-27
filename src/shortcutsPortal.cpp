@@ -88,12 +88,16 @@ int ShortcutsPortal::getVersion()
     return version;
 };
 
-void ShortcutsPortal::createShortcut(const char* name, const char* description, obs_hotkey_id id)
+void ShortcutsPortal::createShortcut(
+    const char* name,
+    const char* description,
+    const std::function<void(bool pressed)>& callback
+)
 {
     m_shortcuts[name] = {
         .name = name,
         .description = description,
-        .id = id
+        .callback = callback
     };
 };
 
@@ -108,12 +112,62 @@ void ShortcutsPortal::createShortcuts()
             auto name = obs_hotkey_get_name(binding);
             auto description = obs_hotkey_get_description(binding);
 
-            t->createShortcut(name, description, id);
+            t->createShortcut(name, description, [id](bool pressed) {
+                obs_hotkey_trigger_routed_callback(id, pressed);
+            });
 
             return true;
         },
         this
     );
+
+    // KDE and Gnome don't allow binding multiple key combinations to the same action like obs does...
+    // so add custom "toggle" shortcuts for actions that can be started / stopped
+
+    createShortcut("_toggle_recording", "Toggle Recording", [](bool pressed) {
+        // only want this to trigger when we press the bind, not when we release it
+        if (!pressed)
+            return;
+
+        if (obs_frontend_recording_active()) {
+            obs_frontend_recording_stop();
+        } else {
+            obs_frontend_recording_start();
+        }
+    });
+
+    createShortcut("_toggle_streaming", "Toggle Streaming", [](bool pressed) {
+        if (!pressed)
+            return;
+
+        if (obs_frontend_streaming_active()) {
+            obs_frontend_streaming_stop();
+        } else {
+            obs_frontend_streaming_start();
+        }
+    });
+
+    createShortcut("_toggle_replay_buffer", "Toggle Replay Buffer", [](bool pressed) {
+        if (!pressed)
+            return;
+
+        if (obs_frontend_replay_buffer_active()) {
+            obs_frontend_replay_buffer_stop();
+        } else {
+            obs_frontend_replay_buffer_start();
+        }
+    });
+
+    createShortcut("_toggle_virtualcam", "Toggle Virtual Camera", [](bool pressed) {
+        if (!pressed)
+            return;
+
+        if (obs_frontend_virtualcam_active()) {
+            obs_frontend_stop_virtualcam();
+        } else {
+            obs_frontend_start_virtualcam();
+        }
+    });
 }
 
 void ShortcutsPortal::onCreateSessionResponse(uint, const QVariantMap& results)
@@ -166,7 +220,7 @@ void ShortcutsPortal::onActivatedSignal(
 )
 {
     if (m_shortcuts.contains(shortcutName)) {
-        obs_hotkey_trigger_routed_callback(m_shortcuts[shortcutName].id, true);
+        m_shortcuts[shortcutName].callback(true);
     }
 };
 
@@ -178,7 +232,7 @@ void ShortcutsPortal::onDeactivatedSignal(
 )
 {
     if (m_shortcuts.contains(shortcutName)) {
-        obs_hotkey_trigger_routed_callback(m_shortcuts[shortcutName].id, false);
+        m_shortcuts[shortcutName].callback(false);
     }
 };
 

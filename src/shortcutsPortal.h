@@ -21,6 +21,7 @@
 #include <QMainWindow>
 #include <QtDBus/QtDBus>
 
+#include <functional>
 #include <obs-frontend-api.h>
 #include <obs-hotkey.h>
 
@@ -29,7 +30,7 @@ struct Shortcut
     QString name;
     QString description;
 
-    obs_hotkey_id id;
+    std::function<void(bool pressed)> callback;
 };
 
 class ShortcutsPortal : public QObject
@@ -44,7 +45,11 @@ public:
     void bindShortcuts();
     void configureShortcuts();
 
-    void createShortcut(const char* name, const char* description, obs_hotkey_id id);
+    void createShortcut(
+        const char* name,
+        const char* description,
+        const std::function<void(bool pressed)>& callback
+    );
 
     void createShortcuts();
 
