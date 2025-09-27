@@ -11,6 +11,15 @@ Requires somewhat modern Qt, but not like distros with old Qt (like ubuntu 24.04
 
 Thanks to https://github.com/slbtty/qt_wayland_globalshortcut_via_portal/ which i used as a reference to implement the portal
 
+## Configuring after initial portal dialog
+
+To configure shortcuts after the initial setup screen you have to go to your desktop environment settings page for them.
+
+On KDE Plasma its on System Settings -> Keyboard -> Shortcuts -> OBS Studio
+
+On Gnome its on Settings -> Apps -> OBS Studio -> Global Shortcuts
+
+
 ## Build instructions
 
 Uh go look at the OBS plugin template docs:
