@@ -99,6 +99,12 @@ jobs:
           echo "pluginName=${product_name}" >> $GITHUB_OUTPUT
           echo "pluginVersion=${product_version}" >> $GITHUB_OUTPUT
 
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: 6.9.2
+          modules: qtwaylandcompositor
+
       - uses: actions/cache/restore@v4
         id: ccache-cache
         with:
