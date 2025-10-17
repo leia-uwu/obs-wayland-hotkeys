@@ -169,6 +169,9 @@ void ShortcutsPortal::createShortcuts()
         }
     });
 
+    // https://github.com/obsproject/obs-studio/pull/12580
+    // OBS API currently broken for this function. Will be fixed with related merge request. Syntax remains correct.
+
     createShortcut("_toggle_preview", "Toggle Preview", [](bool pressed) {
         if (!pressed)
             return;
