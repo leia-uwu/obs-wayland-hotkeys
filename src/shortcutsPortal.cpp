@@ -168,6 +168,28 @@ void ShortcutsPortal::createShortcuts()
             obs_frontend_start_virtualcam();
         }
     });
+
+    createShortcut("_toggle_preview", "Toggle Preview", [](bool pressed) {
+        if (!pressed)
+            return;
+
+        if (obs_frontend_preview_enabled()) {
+            obs_frontend_set_preview_enabled(false);
+        } else {
+            obs_frontend_set_preview_enabled(true);
+        }
+    });
+
+    createShortcut("_toggle_studio_mode", "Toggle Studio Mode", [](bool pressed) {
+        if (!pressed)
+            return;
+
+        if (obs_frontend_preview_program_mode_active()) {
+            obs_frontend_set_preview_program_mode(false);
+        } else {
+            obs_frontend_set_preview_program_mode(true);
+        }
+    });
 }
 
 void ShortcutsPortal::onCreateSessionResponse(uint, const QVariantMap& results)
