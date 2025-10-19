@@ -20,6 +20,7 @@
 
 #include <obs-frontend-api.h>
 #include <obs-hotkey.h>
+#include <obs.h>
 
 #include <QMessageBox>
 
@@ -170,18 +171,20 @@ void ShortcutsPortal::createShortcuts()
     });
 
     // https://github.com/obsproject/obs-studio/pull/12580
-    // OBS API currently broken for this function. Will be fixed with related merge request. Syntax remains correct.
+    /* Update release version number and uncomment when related request is merged.
 
-    createShortcut("_toggle_preview", "Toggle Preview", [](bool pressed) {
-        if (!pressed)
-            return;
+    if (QVersionNumber::fromString(obs_get_version_string()) >= QVersionNumber(32, 1, 0))
+        createShortcut("_toggle_preview", "Toggle Preview", [](bool pressed) {
+            if (!pressed)
+                return;
 
-        if (obs_frontend_preview_enabled()) {
-            obs_frontend_set_preview_enabled(false);
-        } else {
-            obs_frontend_set_preview_enabled(true);
-        }
-    });
+            if (obs_frontend_preview_enabled()) {
+                obs_frontend_set_preview_enabled(false);
+            } else {
+                obs_frontend_set_preview_enabled(true);
+            }
+        });
+    */
 
     createShortcut("_toggle_studio_mode", "Toggle Studio Mode", [](bool pressed) {
         if (!pressed)
