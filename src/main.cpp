@@ -31,7 +31,7 @@ ShortcutsPortal* portal = nullptr;
 
 bool obs_module_load(void)
 {
-    bool isWayland = QGuiApplication::platformName() == "wayland";
+    bool isWayland = QGuiApplication::platformName().contains("wayland");
     return isWayland;
 }
 
