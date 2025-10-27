@@ -27,11 +27,13 @@ OBS_DECLARE_MODULE()
 #include <QGuiApplication>
 #include <QMainWindow>
 
+using namespace Qt::Literals::StringLiterals;
+
 ShortcutsPortal* portal = nullptr;
 
 bool obs_module_load(void)
 {
-    bool isWayland = QGuiApplication::platformName().contains("wayland");
+    bool isWayland = QGuiApplication::platformName().contains(u"wayland"_s);
     return isWayland;
 }
 

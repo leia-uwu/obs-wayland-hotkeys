@@ -54,7 +54,6 @@ public:
 
     void createShortcuts();
 
-
     void setWindow(QMainWindow* window)
     {
         m_parentWindow = window;
