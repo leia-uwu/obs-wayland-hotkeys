@@ -20,6 +20,7 @@
 
 #include <obs-frontend-api.h>
 #include <obs-hotkey.h>
+#include <obs.h>
 
 #include <QMessageBox>
 
@@ -166,6 +167,33 @@ void ShortcutsPortal::createShortcuts()
             obs_frontend_stop_virtualcam();
         } else {
             obs_frontend_start_virtualcam();
+        }
+    });
+
+    // https://github.com/obsproject/obs-studio/pull/12580
+    /* Update release version number and uncomment when related request is merged.
+
+    if (QVersionNumber::fromString(obs_get_version_string()) >= QVersionNumber(32, 1, 0))
+        createShortcut("_toggle_preview", "Toggle Preview", [](bool pressed) {
+            if (!pressed)
+                return;
+
+            if (obs_frontend_preview_enabled()) {
+                obs_frontend_set_preview_enabled(false);
+            } else {
+                obs_frontend_set_preview_enabled(true);
+            }
+        });
+    */
+
+    createShortcut("_toggle_studio_mode", "Toggle Studio Mode", [](bool pressed) {
+        if (!pressed)
+            return;
+
+        if (obs_frontend_preview_program_mode_active()) {
+            obs_frontend_set_preview_program_mode(false);
+        } else {
+            obs_frontend_set_preview_program_mode(true);
         }
     });
 }
