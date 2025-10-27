@@ -54,7 +54,6 @@ void obs_module_post_load()
 void obs_module_unload(void)
 {
     if (portal) {
-        portal->shutdown();
         delete portal;
     }
 }

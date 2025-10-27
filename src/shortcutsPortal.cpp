@@ -347,7 +347,7 @@ void ShortcutsPortal::configureShortcuts()
     }
 };
 
-void ShortcutsPortal::shutdown()
+ShortcutsPortal::~ShortcutsPortal()
 {
     QDBusConnection::sessionBus().disconnect(
         freedesktopDest,

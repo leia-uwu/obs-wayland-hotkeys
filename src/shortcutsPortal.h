@@ -36,8 +36,9 @@ struct Shortcut
 class ShortcutsPortal : public QObject
 {
     Q_OBJECT
-
 public:
+    ~ShortcutsPortal();
+
     void createSession();
 
     int getVersion();
@@ -53,7 +54,6 @@ public:
 
     void createShortcuts();
 
-    void shutdown();
 
     void setWindow(QMainWindow* window)
     {
