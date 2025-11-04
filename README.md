@@ -45,4 +45,5 @@ Follow the instructions from the [Hyprland wiki](https://wiki.hypr.land/Configur
 Uh go look at the OBS plugin template docs:
 https://github.com/obsproject/obs-plugintemplate/wiki/
 
+Requires the `Qt6WaylandClient` and `Qt6GuiPrivate` development files, which should also pull in `Qt6Base`.
 
