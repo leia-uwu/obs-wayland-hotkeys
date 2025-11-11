@@ -15,7 +15,7 @@ Thanks to [qt_wayland_globalshortcut_via_portal](https://github.com/slbtty/qt_wa
 
 All the hotkeys provided by [obs_enum_hotkeys](https://github.com/obsproject/obs-studio/blob/d84ff0eb6fa7b32ba9629d3d27c92b391b0310cc/libobs/obs-hotkey.c#L970) are registered.
 
-Additionally, since some KDE and Gnome do not allow binding multiple keybindings to the same action, the following extra hotkeys are added:
+Additionally, since KDE and Gnome do not allow binding multiple keybindings to the same action, the following extra hotkeys are added:
 
 ```
 :_toggle_recording -> Toggle Recording
