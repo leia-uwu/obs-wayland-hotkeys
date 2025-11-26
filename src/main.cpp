@@ -21,7 +21,17 @@
 #include <obs-frontend-api.h>
 #include <obs-module.h>
 
-OBS_DECLARE_MODULE()
+OBS_DECLARE_MODULE();
+
+MODULE_EXPORT const char *obs_module_text(void)
+{
+    return "OBS Wayland Hotkeys";
+}
+
+MODULE_EXPORT const char *obs_module_description(void)
+{
+    return "Provides global hotkey support for OBS Studio on Wayland using the Freedesktop GlobalShortcuts portal.";
+}
 
 #include <QAction>
 #include <QGuiApplication>
