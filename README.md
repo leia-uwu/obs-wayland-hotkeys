@@ -89,12 +89,19 @@ To change which keys trigger your actions manually:
 
 The Wayland Portal handles shortcuts in "Sessions". How updates are handled depends on the version of the portal your system uses.
 
-### Version 1 vs Version 2 Behavior
+### Understanding Portal Versions
 
-**The Issue:**
+The **Global Shortcuts Portal** is the system component that manages these hotkeys. It has two main versions:
+
+*   **Version 1:** The initial implementation found in most current Linux distributions (e.g., Ubuntu 24.04/25.04, Fedora 40). Once an application registers shortcuts, the system "locks" that list. If you add a new scene in OBS, the system won't see it automatically.
+*   **Version 2:** A newer standard that supports dynamic updates. If your system supports this, new shortcuts might appear automatically without needing a reset.
+
+### The Issue (Common on Version 1)
+
 If you add a new Scene in OBS, or if a new feature is added to this plugin, the new shortcut might not appear in your System Settings immediately because the Operating System "remembers" the old list of shortcuts from the previous session.
 
-**How to Fix (Resetting the Session):**
+### How to Fix (Resetting the Session)
+
 If you are missing shortcuts (like a newly created Scene) in your system settings:
 
 1. **Close OBS.**
