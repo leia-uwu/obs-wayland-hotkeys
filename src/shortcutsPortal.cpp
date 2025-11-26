@@ -115,6 +115,11 @@ void ShortcutsPortal::createShortcuts()
             auto name = obs_hotkey_get_name(binding);
             auto description = obs_hotkey_get_description(binding);
 
+            QString descStr = QString::fromUtf8(description);
+            if (!descStr.startsWith(u"Switch to scene"_s)) {
+                return true;
+            }
+
             t->createShortcut(name, description, [id](bool pressed) {
                 obs_hotkey_trigger_routed_callback(id, pressed);
             });
