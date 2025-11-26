@@ -59,7 +59,7 @@ Inside OBS, you can try to trigger the configuration dialog manually:
 1. Go to the **Tools** menu at the top of OBS.
 2. Select **Configure Wayland Hotkeys**.
 
-*Note: This button attempts to open the system's shortcut configuration window. On some desktop environments, this button may do nothing. In that case, use the System Settings locations below.*
+*Note: This menu item may not be available on all systems. Additionally, on some desktop environments, clicking it may do nothing if the system does not support the configuration request. In either case, use the System Settings locations below.*
 
 ---
 
