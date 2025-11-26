@@ -19,24 +19,24 @@
 #pragma once
 
 #include <QMainWindow>
+#include <QSet>
 #include <QtDBus/QtDBus>
-
 #include <functional>
 #include <obs-frontend-api.h>
-#include <obs-hotkey.h>
 
-struct Shortcut
+struct PortalShortcut
 {
     QString name;
     QString description;
 
-    std::function<void(bool pressed)> callback;
+    std::function<void(bool pressed)> callbackFunc;
 };
 
 class ShortcutsPortal : public QObject
 {
     Q_OBJECT
 public:
+    explicit ShortcutsPortal(QObject* parent = nullptr);
     ~ShortcutsPortal();
 
     void createSession();
@@ -47,9 +47,9 @@ public:
     void configureShortcuts();
 
     void createShortcut(
-        const char* name,
-        const char* description,
-        const std::function<void(bool pressed)>& callback
+        const QString& name,
+        const QString& description,
+        const std::function<void(bool pressed)>& callbackFunc
     );
 
     void createShortcuts();
@@ -59,8 +59,10 @@ public:
         m_parentWindow = window;
     }
 
+    static void obsFrontendEvent(enum obs_frontend_event event, void* private_data);
+
 public Q_SLOTS:
-    void onCreateSessionResponse(uint, const QVariantMap& results);
+    void onCreateSessionResponse(uint response, const QVariantMap& results);
 
     void onActivatedSignal(
         const QDBusObjectPath& sessionHandle,
@@ -79,13 +81,16 @@ public Q_SLOTS:
 private:
     QString getWindowId();
 
-    QMap<QString, Shortcut> m_shortcuts;
+    QMap<QString, PortalShortcut> m_shortcuts;
 
     const QString m_handleToken = "obs_portal_shortcuts";
-    const QString m_sessionHandleToken = "obs_portal_shortcuts";
+    const QString m_sessionHandleToken = "obs_portal_shortcuts_session";
 
     QMainWindow* m_parentWindow = nullptr;
 
     QDBusObjectPath m_responseHandle;
     QDBusObjectPath m_sessionObjPath;
+
+    bool m_isLoaded = false;
+    void* m_currentValidSources = nullptr;
 };
