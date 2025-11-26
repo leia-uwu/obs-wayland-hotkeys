@@ -52,14 +52,18 @@ When you launch OBS Studio for the first time after installing this plugin:
 
 ## Configuring Shortcuts
 
-If you need to change your keys later, you manage them in your **System Settings**, not inside OBS.
+Once the initial setup is complete, **OBS no longer manages these keys**.
 
-### The "Tools" Menu
-Inside OBS, you can try to trigger the configuration dialog manually:
+To change, add, or remove key bindings, you must go to your **Operating System's Settings** (e.g., GNOME Settings or KDE System Settings). The standard "Hotkeys" menu inside OBS will not work for these actions.
+
+See the [System Settings Locations](#system-settings-locations) section below for exactly where to find these settings on your computer.
+
+### The "Tools" Menu (Optional Shortcut)
+Inside OBS, there is a helper button that attempts to open these settings for you:
 1. Go to the **Tools** menu at the top of OBS.
 2. Select **Configure Wayland Hotkeys**.
 
-*Note: This menu item may not be available on all systems. Additionally, on some desktop environments, clicking it may do nothing if the system does not support the configuration request. In either case, use the System Settings locations below.*
+*Note: This menu item may not be available on all systems. Additionally, on some desktop environments, clicking it may do nothing if the system does not support the configuration request. If this button doesn't work, simply open your System Settings manually as described below.*
 
 ---
 
