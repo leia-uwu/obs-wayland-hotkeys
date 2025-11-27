@@ -38,6 +38,9 @@ static const QString FREEDESKTOP_DEST = u"org.freedesktop.portal.Desktop"_s;
 static const QString FREEDESKTOP_PATH = u"/org/freedesktop/portal/desktop"_s;
 static const QString GLOBAL_SHORTCUTS_INTERFACE = u"org.freedesktop.portal.GlobalShortcuts"_s;
 
+ShortcutsPortal::ShortcutsPortal(QMainWindow* window)
+    : m_parentWindow(window) { };
+
 void ShortcutsPortal::createSession()
 {
     QDBusMessage createSessionCall = QDBusMessage::createMethodCall(

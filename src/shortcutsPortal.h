@@ -37,6 +37,7 @@ class ShortcutsPortal : public QObject
 {
     Q_OBJECT
 public:
+    ShortcutsPortal(QMainWindow* window);
     ~ShortcutsPortal() override;
 
     void createSession();
@@ -53,11 +54,6 @@ public:
     );
 
     void createShortcuts();
-
-    void setWindow(QMainWindow* window)
-    {
-        m_parentWindow = window;
-    }
 
 private:
     Q_SLOT void onCreateSessionResponse(uint, const QVariantMap& results);

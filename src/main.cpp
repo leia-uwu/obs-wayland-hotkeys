@@ -39,9 +39,9 @@ bool obs_module_load(void)
 
 void obs_module_post_load()
 {
-    PORTAL = new ShortcutsPortal();
     auto* mainWindow = static_cast<QMainWindow*>(obs_frontend_get_main_window());
-    PORTAL->setWindow(mainWindow);
+    PORTAL = new ShortcutsPortal(mainWindow);
+
     PORTAL->createSession();
 
     if (ShortcutsPortal::getVersion() >= 2) {
