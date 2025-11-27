@@ -48,10 +48,14 @@ public:
     void configureShortcuts();
 
     void createShortcut(
-        const char* name,
-        const char* description,
+        const QString& name,
+        const QString& description,
         const std::function<void(bool pressed)>& callback
     );
+
+    void createOBSShortcut(obs_hotkey_id id, obs_hotkey_t* hotkey);
+
+    static QPair<QString, QString> getHotkeyNameAndDesc(obs_hotkey_t* hotkey);
 
     void createShortcuts();
 

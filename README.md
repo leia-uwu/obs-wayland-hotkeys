@@ -46,6 +46,10 @@ cp build_x86_64/obs-wayland-hotkeys.so ~/.config/obs-studio/plugins/obs-wayland-
 
 All the hotkeys provided by [obs_enum_hotkeys](https://github.com/obsproject/obs-studio/blob/d84ff0eb6fa7b32ba9629d3d27c92b391b0310cc/libobs/obs-hotkey.c#L970) are registered.
 
+Hotkeys that have a source or scene attached to them will have an ID with a period + the source name with spaces replaced with underscores
+
+Example: `Switch to scene` for an scene named `Scene 2` is `OBSBasic.SelectScene.Scene_2`
+
 Additionally, since KDE Plasma and GNOME do not allow binding multiple keybindings to the same action, the following extra hotkeys are added:
 
 ```

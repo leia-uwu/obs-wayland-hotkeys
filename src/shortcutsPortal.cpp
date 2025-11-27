@@ -18,8 +18,10 @@
 
 #include "shortcutsPortal.h"
 
+#include <callback/signal.h>
 #include <obs-frontend-api.h>
 #include <obs-hotkey.h>
+#include <obs-source.h>
 #include <obs.h>
 
 #include <QMessageBox>
@@ -94,11 +96,15 @@ int ShortcutsPortal::getVersion()
 };
 
 void ShortcutsPortal::createShortcut(
-    const char* name,
-    const char* description,
+    const QString& name,
+    const QString& description,
     const std::function<void(bool pressed)>& callback
 )
 {
+    if (m_shortcuts.contains(name)) {
+        qWarning() << "Shortcut" << name << "already registered!";
+        return;
+    }
     m_shortcuts[name] = {
         .name = name,
         .description = description,
@@ -106,21 +112,47 @@ void ShortcutsPortal::createShortcut(
     };
 };
 
+QPair<QString, QString> ShortcutsPortal::getHotkeyNameAndDesc(obs_hotkey_t* hotkey)
+{
+    QString name = obs_hotkey_get_name(hotkey);
+    QString description = obs_hotkey_get_description(hotkey);
+
+    void* registerer = obs_hotkey_get_registerer(hotkey);
+    auto regType = obs_hotkey_get_registerer_type(hotkey);
+
+    // for source hotkeys we add the source name to the name and description
+    // example: "Switch to scene" for "Scene 2" is "OBSBasic.SelectScene.Scene_2"
+    if (regType == OBS_HOTKEY_REGISTERER_SOURCE) {
+        auto* weakSource = (obs_weak_source_t*)registerer;
+        auto* source = obs_weak_source_get_source(weakSource);
+
+        QString sourceName = obs_source_get_name(source);
+
+        name += u".%1"_s.arg(sourceName.replace(" ", "_"));
+        description += u" (%1)"_s.arg(obs_source_get_name(source));
+
+        obs_source_release(source);
+    }
+
+    return {name, description};
+};
+
+void ShortcutsPortal::createOBSShortcut(obs_hotkey_id id, obs_hotkey_t* hotkey)
+{
+    auto name = getHotkeyNameAndDesc(hotkey);
+
+    createShortcut(name.first, name.second, [id](bool pressed) {
+        obs_hotkey_trigger_routed_callback(id, pressed);
+    });
+}
+
 void ShortcutsPortal::createShortcuts()
 {
     m_shortcuts.clear();
 
     obs_enum_hotkeys(
-        [](void* data, obs_hotkey_id id, obs_hotkey_t* binding) {
-            auto* t = static_cast<ShortcutsPortal*>(data);
-
-            const auto* name = obs_hotkey_get_name(binding);
-            const auto* description = obs_hotkey_get_description(binding);
-
-            t->createShortcut(name, description, [id](bool pressed) {
-                obs_hotkey_trigger_routed_callback(id, pressed);
-            });
-
+        [](void* data, obs_hotkey_id id, obs_hotkey_t* hotkey) {
+            ((ShortcutsPortal*)data)->createOBSShortcut(id, hotkey);
             return true;
         },
         this
@@ -202,6 +234,13 @@ void ShortcutsPortal::createShortcuts()
     });
 }
 
+static void reloadHotkeys(void* data, calldata_t* /* unused */)
+{
+    auto* portal = (ShortcutsPortal*)data;
+    portal->createShortcuts();
+    portal->bindShortcuts();
+}
+
 void ShortcutsPortal::onCreateSessionResponse(uint /*unused*/, const QVariantMap& results)
 {
     if (results.contains(u"session_handle"_s)) {
@@ -242,6 +281,15 @@ void ShortcutsPortal::onCreateSessionResponse(uint /*unused*/, const QVariantMap
 
     createShortcuts();
     bindShortcuts();
+
+    // listen to hotkey registered so shortcuts added after initialization
+    // (example: adding new sources / scenes, enabling replay buffer etc)
+    // will not require restarting OBS
+    //
+    // NOTE: also listening to hotkey_unregister and removing the hotkeys from the portal is a bad idea..
+    // it ends up unregistering a bunch of hotkeys on shutdown
+    // and prompting the user to register them again on next startup...
+    signal_handler_connect(obs_get_signal_handler(), "hotkey_register", reloadHotkeys, this);
 };
 
 void ShortcutsPortal::onActivatedSignal(
@@ -351,6 +399,8 @@ void ShortcutsPortal::configureShortcuts()
 
 ShortcutsPortal::~ShortcutsPortal()
 {
+    signal_handler_disconnect(obs_get_signal_handler(), "hotkey_register", reloadHotkeys, this);
+
     QDBusConnection::sessionBus().disconnect(
         FREEDESKTOP_DEST,
         FREEDESKTOP_PATH,

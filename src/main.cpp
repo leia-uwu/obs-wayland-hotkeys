@@ -42,7 +42,14 @@ void obs_module_post_load()
     auto* mainWindow = static_cast<QMainWindow*>(obs_frontend_get_main_window());
     PORTAL = new ShortcutsPortal(mainWindow);
 
-    PORTAL->createSession();
+    obs_frontend_add_event_callback(
+        [](obs_frontend_event event, void* /*unused*/) {
+            if (event == OBS_FRONTEND_EVENT_FINISHED_LOADING) {
+                PORTAL->createSession();
+            }
+        },
+        nullptr
+    );
 
     if (ShortcutsPortal::getVersion() >= 2) {
         auto* action = (QAction*)obs_frontend_add_tools_menu_qaction("Configure Wayland Hotkeys");
