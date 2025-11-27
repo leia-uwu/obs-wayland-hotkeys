@@ -169,7 +169,7 @@ cmake -G Ninja -DCMAKE_INSTALL_PREFIX=/app -DCMAKE_INSTALL_RPATH=/app/lib -B bui
 ninja -C build
 
 # Install the plugin to the correct Flatpak location: /app/lib/obs-plugins/
-ninja -C build install
+cp build/obs-wayland-hotkeys.so ~/.var/app/com.obsproject.Studio/config/obs-studio/plugins/obs-wayland-hotkeys/bin/64bit/
 ```
 
 After these steps, the plugin `obs-wayland-hotkeys.so` will be installed in `/app/lib/obs-plugins/` within the Flatpak environment. You can then exit the Flatpak shell (`exit`) and launch OBS Studio.
