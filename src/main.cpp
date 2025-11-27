@@ -29,7 +29,7 @@ OBS_DECLARE_MODULE()
 
 using namespace Qt::Literals::StringLiterals;
 
-ShortcutsPortal* portal = nullptr;
+ShortcutsPortal* PORTAL = nullptr;
 
 bool obs_module_load(void)
 {
@@ -39,23 +39,21 @@ bool obs_module_load(void)
 
 void obs_module_post_load()
 {
-    portal = new ShortcutsPortal();
-    QMainWindow* mainWindow = static_cast<QMainWindow*>(obs_frontend_get_main_window());
-    portal->setWindow(mainWindow);
-    portal->createSession();
+    PORTAL = new ShortcutsPortal();
+    auto* mainWindow = static_cast<QMainWindow*>(obs_frontend_get_main_window());
+    PORTAL->setWindow(mainWindow);
+    PORTAL->createSession();
 
-    if (portal->getVersion() >= 2) {
-        QAction* action = (QAction*)obs_frontend_add_tools_menu_qaction("Configure Wayland Hotkeys");
+    if (ShortcutsPortal::getVersion() >= 2) {
+        auto* action = (QAction*)obs_frontend_add_tools_menu_qaction("Configure Wayland Hotkeys");
 
         QObject::connect(action, &QAction::triggered, []() {
-            portal->configureShortcuts();
+            PORTAL->configureShortcuts();
         });
     }
 }
 
 void obs_module_unload(void)
 {
-    if (portal) {
-        delete portal;
-    }
+    delete PORTAL;
 }

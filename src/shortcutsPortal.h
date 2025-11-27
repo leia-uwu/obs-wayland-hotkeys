@@ -37,11 +37,11 @@ class ShortcutsPortal : public QObject
 {
     Q_OBJECT
 public:
-    ~ShortcutsPortal();
+    ~ShortcutsPortal() override;
 
     void createSession();
 
-    int getVersion();
+    static int getVersion();
 
     void bindShortcuts();
     void configureShortcuts();
@@ -59,24 +59,23 @@ public:
         m_parentWindow = window;
     }
 
-public Q_SLOTS:
-    void onCreateSessionResponse(uint, const QVariantMap& results);
-
-    void onActivatedSignal(
-        const QDBusObjectPath& sessionHandle,
-        const QString& shortcutName,
-        qulonglong timestamp,
-        const QVariantMap& options
-    );
-
-    void onDeactivatedSignal(
-        const QDBusObjectPath& sessionHandle,
-        const QString& shortcutName,
-        qulonglong timestamp,
-        const QVariantMap& options
-    );
-
 private:
+    Q_SLOT void onCreateSessionResponse(uint, const QVariantMap& results);
+
+    Q_SLOT void onActivatedSignal(
+        const QDBusObjectPath& sessionHandle,
+        const QString& shortcutName,
+        qulonglong timestamp,
+        const QVariantMap& options
+    );
+
+    Q_SLOT void onDeactivatedSignal(
+        const QDBusObjectPath& sessionHandle,
+        const QString& shortcutName,
+        qulonglong timestamp,
+        const QVariantMap& options
+    );
+
     QString getWindowId();
 
     QMap<QString, Shortcut> m_shortcuts;
