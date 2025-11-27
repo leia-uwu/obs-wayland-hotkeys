@@ -41,7 +41,11 @@ static const QString FREEDESKTOP_PATH = u"/org/freedesktop/portal/desktop"_s;
 static const QString GLOBAL_SHORTCUTS_INTERFACE = u"org.freedesktop.portal.GlobalShortcuts"_s;
 
 ShortcutsPortal::ShortcutsPortal(QMainWindow* window)
-    : m_parentWindow(window) { };
+    : m_parentWindow(window)
+{
+    m_reloadTimer.setSingleShot(true);
+    connect(&m_reloadTimer, &QTimer::timeout, this, &ShortcutsPortal::createShortcuts);
+};
 
 void ShortcutsPortal::createSession()
 {
@@ -236,13 +240,21 @@ void ShortcutsPortal::createShortcuts()
             obs_frontend_set_preview_program_mode(true);
         }
     });
+
+    bindShortcuts();
 }
 
 static void reloadHotkeys(void* data, calldata_t* /* unused */)
 {
     auto* portal = (ShortcutsPortal*)data;
-    portal->createShortcuts();
-    portal->bindShortcuts();
+    portal->reloadShortcuts();
+}
+
+void ShortcutsPortal::reloadShortcuts()
+{
+    // debounce reloading to prevent it spawning a gazilion dialogs if many hotkeys are registered at once
+    m_reloadTimer.stop();
+    m_reloadTimer.start(250);
 }
 
 void ShortcutsPortal::onCreateSessionResponse(uint /*unused*/, const QVariantMap& results)
@@ -284,7 +296,6 @@ void ShortcutsPortal::onCreateSessionResponse(uint /*unused*/, const QVariantMap
     );
 
     createShortcuts();
-    bindShortcuts();
 
     // listen to hotkey registered so shortcuts added after initialization
     // (example: adding new sources / scenes, enabling replay buffer etc)

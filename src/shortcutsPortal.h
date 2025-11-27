@@ -44,8 +44,14 @@ public:
 
     static int getVersion();
 
-    void bindShortcuts();
     void configureShortcuts();
+
+    void createShortcuts();
+
+    void reloadShortcuts();
+
+private:
+    void bindShortcuts();
 
     void createShortcut(
         const QString& name,
@@ -55,9 +61,6 @@ public:
 
     void createOBSShortcut(obs_hotkey_id id, obs_hotkey_t* hotkey);
 
-    void createShortcuts();
-
-private:
     Q_SLOT void onCreateSessionResponse(uint, const QVariantMap& results);
 
     Q_SLOT void onActivatedSignal(
@@ -73,6 +76,8 @@ private:
         qulonglong timestamp,
         const QVariantMap& options
     );
+
+    QTimer m_reloadTimer;
 
     QString getWindowId();
 
