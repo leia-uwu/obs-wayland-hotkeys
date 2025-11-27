@@ -3,8 +3,8 @@
 An OBS Studio plugin to integrate OBS hotkeys with the [wayland global shortcuts portal](https://flatpak.github.io/xdg-desktop-portal/docs/doc-org.freedesktop.portal.GlobalShortcuts.html).
 
 <p float="left" align="center">
-    <img src="screenshots/1.png" width="500" alt="OBS Open with the KDE Plasma shortcuts portal dialog asking to register the shortcuts">
-    <img src="screenshots/2.png" width="500" alt="OBS Shortcuts on KDE Plasma system settings Shortcuts page">
+    <img src="screenshots/1.png" width="400" alt="OBS Open with the KDE Plasma shortcuts portal dialog asking to register the shortcuts">
+    <img src="screenshots/2.png" width="400" alt="OBS Shortcuts on KDE Plasma system settings Shortcuts page">
 </p>
 
 Requires a distribution with somewhat up to date Qt (e.g Ubuntu 24.04 LTS with Qt 6.4 will **not** work)
