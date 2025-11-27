@@ -121,12 +121,13 @@ If you are missing shortcuts (like a newly created Scene) in your system setting
 
 ## Build Instructions
 
-*For developers or users on distributions without Flatpak support.*
+### Building for Flatpak (Recommended)
 
-Requirements:
-- Qt 6 (Modern version required, e.g., Qt 6.9)
-- CMake
-- OBS Studio development headers
+If you use the Flatpak version of OBS Studio, you **must** build the plugin inside the Flatpak environment. This ensures the plugin uses the exact same version of Qt and dependencies as OBS itself.
 
-Refer to the [OBS Plugin Template Documentation](https://github.com/obsproject/obs-plugintemplate/wiki/) for standard build steps.
+**Prerequisites:**
+- `flatpak` installed.
+- `com.obsproject.Studio` installed.
 
+#### 1. Install the SDK
+Check which runtime OBS is using and install the matching SDK.
