@@ -130,4 +130,46 @@ If you use the Flatpak version of OBS Studio, you **must** build the plugin insi
 - `com.obsproject.Studio` installed.
 
 #### 1. Install the SDK
-Check which runtime OBS is using and install the matching SDK.
+First, check which runtime OBS Studio is using with `flatpak info com.obsproject.Studio`. Then, install the matching SDK. For example, if OBS uses `org.kde.Platform/x86_64/6.7`, you would install `org.kde.Platform.Sdk/x86_64/6.7`.
+
+```bash
+flatpak info com.obsproject.Studio # Check runtime, e.g., org.kde.Platform/x86_64/6.7
+flatpak install org.kde.Platform.Sdk/x86_64/6.7 # Replace with your detected runtime and version
+```
+
+#### 2. Enter the Flatpak Build Environment
+Access the Flatpak development shell for OBS Studio. This ensures all dependencies (like Qt) match the OBS Flatpak runtime.
+
+```bash
+flatpak run --command=bash --devel com.obsproject.Studio
+```
+
+#### 3. Navigate to Source Directory
+Inside the Flatpak shell, navigate to the directory where you cloned or extracted this plugin's source code. The host file system is typically mounted under `/run/host`.
+
+```bash
+cd /run/host/path/to/your/obs-wayland-hotkeys
+```
+
+#### 4. Configure, Build, and Install
+Once you are in the plugin's source directory within the Flatpak shell, execute the following commands.
+*   We use the `Ninja` generator for faster builds.
+*   `CMAKE_INSTALL_PREFIX` is set to `/app`, which is the root of the Flatpak runtime.
+*   `CMAKE_INSTALL_RPATH` is set to `/app/lib` to ensure the plugin can correctly locate `libobs-frontend-api.so.0` and other OBS shared libraries within the Flatpak environment.
+*   `rm -rf build` ensures a clean build, especially important if you previously encountered issues with dependency mismatches.
+
+```bash
+# Delete existing build directory to ensure a clean build
+rm -rf build
+
+# Configure CMake
+cmake -G Ninja -DCMAKE_INSTALL_PREFIX=/app -DCMAKE_INSTALL_RPATH=/app/lib -B build .
+
+# Build the plugin
+ninja -C build
+
+# Install the plugin to the correct Flatpak location: /app/lib/obs-plugins/
+ninja -C build install
+```
+
+After these steps, the plugin `obs-wayland-hotkeys.so` will be installed in `/app/lib/obs-plugins/` within the Flatpak environment. You can then exit the Flatpak shell (`exit`) and launch OBS Studio.
