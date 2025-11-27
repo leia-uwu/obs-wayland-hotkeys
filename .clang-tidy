@@ -1,0 +1,34 @@
+Checks:
+  - modernize-*
+  - misc-unused-*,
+  - readability-*
+  - bugprone-*
+  - performance-*
+  - -readability-magic-numbers
+  - -readability-identifier-length
+  - -readability-braces-around-statements
+  - -readability-math-missing-parentheses
+  - -readability-isolate-declaration
+  - -modernize-use-trailing-return-type
+  - -modernize-avoid-c-arrays
+  - -bugprone-easily-swappable-parameters
+  - -bugprone-assignment-in-if-condition
+  - -bugprone-narrowing-conversions
+  - -bugprone-switch-missing-default-case
+
+CheckOptions:
+  - { key: readability-identifier-naming.ClassCase,                     value: CamelCase }
+  - { key: readability-identifier-naming.EnumCase,                      value: CamelCase }
+  - { key: readability-identifier-naming.FunctionCase,                  value: camelCase }
+  - { key: readability-identifier-naming.GlobalVariableCase,            value: UPPER_CASE }
+  - { key: readability-identifier-naming.GlobalFunctionCase,            value: CamelCase }
+  - { key: readability-identifier-naming.GlobalConstantCase,            value: UPPER_CASE }
+  - { key: readability-identifier-naming.MacroDefinitionCase,           value: UPPER_CASE }
+  - { key: readability-identifier-naming.EnumConstantCase,              value: UPPER_CASE }
+  - { key: readability-identifier-naming.PublicStaticConstantCase,      value: UPPER_CASE }
+  - { key: readability-identifier-naming.ClassMemberCase,               value: camelCase }
+  - { key: readability-identifier-naming.PrivateMemberPrefix,           value: m_ }
+  - { key: readability-identifier-naming.ProtectedMemberPrefix,         value: m_ }
+  - { key: readability-identifier-naming.PrivateStaticMemberPrefix,     value: s_ }
+  - { key: readability-identifier-naming.ProtectedStaticMemberPrefix,   value: s_ }
+  - { key: readability-function-cognitive-complexity.Threshold,          value: 30 }
