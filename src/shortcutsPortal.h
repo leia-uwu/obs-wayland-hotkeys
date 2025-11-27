@@ -55,8 +55,6 @@ public:
 
     void createOBSShortcut(obs_hotkey_id id, obs_hotkey_t* hotkey);
 
-    static QPair<QString, QString> getHotkeyNameAndDesc(obs_hotkey_t* hotkey);
-
     void createShortcuts();
 
 private:

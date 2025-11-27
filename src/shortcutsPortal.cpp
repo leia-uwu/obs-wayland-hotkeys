@@ -62,7 +62,11 @@ void ShortcutsPortal::createSession()
 
     QDBusMessage call = QDBusConnection::sessionBus().call(createSessionCall);
     if (call.type() != QDBusMessage::ReplyMessage) {
-        QMessageBox::critical(m_parentWindow, u"Failed to create global shortcuts session"_s, call.errorMessage());
+        QMessageBox::critical(
+            m_parentWindow,
+            u"Failed to create global shortcuts session"_s,
+            u"Your desktop environment doesn't support the shortcuts portal or it crashed!\nError: %1"_s.arg(call.errorMessage())
+        );
     }
 
     this->m_responseHandle = call.arguments().first().value<QDBusObjectPath>();
@@ -112,7 +116,7 @@ void ShortcutsPortal::createShortcut(
     };
 };
 
-QPair<QString, QString> ShortcutsPortal::getHotkeyNameAndDesc(obs_hotkey_t* hotkey)
+static QPair<QString, QString> getHotkeyNameAndDesc(obs_hotkey_t* hotkey)
 {
     QString name = obs_hotkey_get_name(hotkey);
     QString description = obs_hotkey_get_description(hotkey);
