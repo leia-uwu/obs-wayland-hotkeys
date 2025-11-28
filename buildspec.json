@@ -33,7 +33,7 @@
     },
     "name": "obs-wayland-hotkeys",
     "displayName": "Wayland hotkeys",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "author": "Leia",
     "website": "https://github.com/leia-uwu/obs-wayland-hotkeys",
     "email": "leia@tutamail.com"
