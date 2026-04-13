@@ -145,6 +145,12 @@ static QPair<QString, QString> getHotkeyNameAndDesc(obs_hotkey_t* hotkey)
     return {name, description};
 };
 
+static bool hasAudioCapabilities(obs_source_t* source)
+{
+    uint32_t flags = obs_source_get_output_flags(source);
+    return (flags & OBS_SOURCE_AUDIO) != 0;
+}
+
 void ShortcutsPortal::createOBSShortcut(obs_hotkey_id id, obs_hotkey_t* hotkey)
 {
     auto name = getHotkeyNameAndDesc(hotkey);
@@ -240,6 +246,43 @@ void ShortcutsPortal::createShortcuts()
             obs_frontend_set_preview_program_mode(true);
         }
     });
+
+    // Create audio source mute toggles for all audio-enabled sources
+    obs_enum_sources(
+        [](void* data, obs_source_t* source) {
+            if (!hasAudioCapabilities(source)) {
+                return true;
+            }
+
+            QString sourceName = obs_source_get_name(source);
+            QString safeSourceName = sourceName.replace(" ", "_");
+            QString shortcutName = u"_toggle_mute.%1"_s.arg(safeSourceName);
+            QString description = u"Toggle Mute (%1)"_s.arg(sourceName);
+
+            auto* portal = (ShortcutsPortal*)data;
+            auto weakSource = std::shared_ptr<obs_weak_source_t>(
+                obs_source_get_weak_source(source),
+                [](obs_weak_source_t* ws) { obs_weak_source_release(ws); }
+            );
+
+            portal->createShortcut(
+                shortcutName,
+                description,
+                [weakSource](bool pressed) {
+                    if (!pressed)
+                        return;
+
+                    obs_source_t* src = obs_weak_source_get_source(weakSource.get());
+                    if (src) {
+                        obs_source_set_muted(src, !obs_source_muted(src));
+                        obs_source_release(src);
+                    }
+                }
+            );
+            return true;
+        },
+        this
+    );
 
     bindShortcuts();
 }
