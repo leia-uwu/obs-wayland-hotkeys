@@ -58,6 +58,7 @@ Additionally, since KDE Plasma and GNOME do not allow binding multiple keybindin
 :_toggle_streaming -> Toggle Streaming
 :_toggle_studio_mode -> Toggle Studio Mode
 :_toggle_virtualcam -> Toggle Virtual Camera
+:_toggle_pause_unpause -> Toggle Pause/Unpause
 ```
 
 ## Configuring

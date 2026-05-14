@@ -214,6 +214,17 @@ void ShortcutsPortal::createShortcuts()
         }
     });
 
+    createShortcut("_toggle_pause_unpause", "Toggle Pause/Unpause", [](bool pressed) {
+        if (!pressed)
+            return;
+
+        if (obs_frontend_recording_paused()) {
+            obs_frontend_recording_pause(false);
+        } else {
+            obs_frontend_recording_pause(true);
+        }
+    });
+
     // https://github.com/obsproject/obs-studio/pull/12580
     /* Update release version number and uncomment when related request is merged.
 
