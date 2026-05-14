@@ -252,6 +252,12 @@ void ShortcutsPortal::createShortcuts()
         }
     });
 
+    createShortcut("_save_replay_buffer", "Save Replay Buffer", [](bool pressed) {
+        if (!pressed)
+            return;
+        obs_frontend_replay_buffer_save();
+    });
+
     bindShortcuts();
 }
 
