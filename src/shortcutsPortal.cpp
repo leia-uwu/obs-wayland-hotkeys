@@ -151,6 +151,31 @@ static bool hasAudioCapabilities(obs_source_t* source)
     return (flags & OBS_SOURCE_AUDIO) != 0;
 }
 
+static bool hasVideoCapabilities(obs_source_t* source)
+{
+    uint32_t flags = obs_source_get_output_flags(source);
+    return (flags & OBS_SOURCE_VIDEO) != 0;
+}
+
+static void toggleVisibility(obs_source_t* source)
+{
+    obs_source_t* currentSceneSource = obs_frontend_get_current_scene();
+    if (!currentSceneSource)
+        return;
+
+    obs_scene_t* currentScene = obs_scene_from_source(currentSceneSource);
+    obs_source_release(currentSceneSource);
+    if (!currentScene)
+        return;
+
+    const char* sourceName = obs_source_get_name(source);
+    obs_sceneitem_t* item = obs_scene_find_source_recursive(currentScene, sourceName);
+    if (!item)
+        return;
+
+    obs_sceneitem_set_visible(item, !obs_sceneitem_visible(item));
+}
+
 void ShortcutsPortal::createOBSShortcut(obs_hotkey_id id, obs_hotkey_t* hotkey)
 {
     auto name = getHotkeyNameAndDesc(hotkey);
@@ -262,7 +287,9 @@ void ShortcutsPortal::createShortcuts()
             auto* portal = (ShortcutsPortal*)data;
             auto weakSource = std::shared_ptr<obs_weak_source_t>(
                 obs_source_get_weak_source(source),
-                [](obs_weak_source_t* ws) { obs_weak_source_release(ws); }
+                [](obs_weak_source_t* ws) {
+                    obs_weak_source_release(ws);
+                }
             );
 
             portal->createShortcut(
@@ -277,6 +304,47 @@ void ShortcutsPortal::createShortcuts()
                         obs_source_set_muted(src, !obs_source_muted(src));
                         obs_source_release(src);
                     }
+                }
+            );
+            return true;
+        },
+        this
+    );
+
+    // Create video/image source visibility toggles for all sources
+    obs_enum_sources(
+        [](void* data, obs_source_t* source) {
+            if (!hasVideoCapabilities(source)) {
+                return true;
+            }
+
+            QString sourceName = obs_source_get_name(source);
+            QString safeSourceName = QString(sourceName).replace(" ", "_");
+            QString shortcutName = u"_toggle_visible.%1"_s.arg(safeSourceName);
+            QString description = u"Toggle Visible (%1)"_s.arg(sourceName);
+
+            auto* portal = (ShortcutsPortal*)data;
+            auto weakSource = std::shared_ptr<obs_weak_source_t>(
+                obs_source_get_weak_source(source),
+                [](obs_weak_source_t* ws) {
+                    obs_weak_source_release(ws);
+                }
+            );
+
+            portal->createShortcut(
+                shortcutName,
+                description,
+                [weakSource](bool pressed) {
+                    if (!pressed)
+                        return;
+
+                    obs_source_t* src = obs_weak_source_get_source(weakSource.get());
+                    if (!src)
+                        return;
+
+                    toggleVisibility(src);
+
+                    obs_source_release(src);
                 }
             );
             return true;
@@ -475,7 +543,7 @@ ShortcutsPortal::~ShortcutsPortal()
         GLOBAL_SHORTCUTS_INTERFACE,
         u"Deactivated"_s,
         this,
-        SLOT(onActivatedSignal(
+        SLOT(onDeactivatedSignal(
             QDBusObjectPath, QString, qulonglong, QVariantMap
         ))
     );
