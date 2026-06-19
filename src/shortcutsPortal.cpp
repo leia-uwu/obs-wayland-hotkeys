@@ -42,7 +42,7 @@ static const QString GLOBAL_SHORTCUTS_INTERFACE = u"org.freedesktop.portal.Globa
 
 ShortcutsPortal::ShortcutsPortal(QMainWindow* window)
     : m_parentWindow(window)
-    , m_dbusCon(QDBusConnection::connectToBus(QDBusConnection::SessionBus, u"obs_wayland_hokeys"_s))
+    , m_dbusCon(QDBusConnection::connectToBus(QDBusConnection::SessionBus, u"obs_wayland_hotkeys"_s))
 {
     m_reloadTimer.setSingleShot(true);
     connect(&m_reloadTimer, &QTimer::timeout, this, &ShortcutsPortal::createShortcuts);
