@@ -18,6 +18,7 @@
 
 #pragma once
 
+#include <QDBusConnection>
 #include <QMainWindow>
 #include <QtDBus/QtDBus>
 
@@ -42,7 +43,7 @@ public:
 
     void createSession();
 
-    static int getVersion();
+    int getVersion();
 
     void configureShortcuts();
 
@@ -90,4 +91,6 @@ private:
 
     QDBusObjectPath m_responseHandle;
     QDBusObjectPath m_sessionObjPath;
+
+    QDBusConnection m_dbusCon;
 };

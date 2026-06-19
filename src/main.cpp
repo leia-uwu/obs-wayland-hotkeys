@@ -51,7 +51,7 @@ void obs_module_post_load()
         nullptr
     );
 
-    if (ShortcutsPortal::getVersion() >= 2) {
+    if (PORTAL->getVersion() >= 2) {
         auto* action = (QAction*)obs_frontend_add_tools_menu_qaction("Configure Wayland Hotkeys");
 
         QObject::connect(action, &QAction::triggered, []() {
